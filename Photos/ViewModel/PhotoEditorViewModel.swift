@@ -102,7 +102,7 @@ class PhotoEditorViewModel: ObservableObject {
         let rotationTransform = CGAffineTransform(rotationAngle: CGFloat(rotationAngle))
         outputImage = outputImage.transformed(by: rotationTransform)
 
-        // Step 4: Sharpness
+        // Step 3: Sharpness
         let sharpnessFilter = CIFilter.sharpenLuminance()
         sharpnessFilter.setValue(outputImage, forKey: kCIInputImageKey)
         sharpnessFilter.sharpness = Float(sharpness)
@@ -111,7 +111,7 @@ class PhotoEditorViewModel: ObservableObject {
             outputImage = sharpnessOutput
         }
 
-        // Step 5: Apply color filters
+        // Step 4: Apply color filters
         for colorFilter in colorFilters {
             let filter = colorFilter.filter
             filter.setValue(outputImage, forKey: kCIInputImageKey)

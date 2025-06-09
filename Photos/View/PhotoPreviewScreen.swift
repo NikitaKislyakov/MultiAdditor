@@ -11,7 +11,6 @@ struct PhotoPreviewScreen: View {
     @State private var goToEditor = false
     
     let image: UIImage
-    var onEdit: () -> Void
 
     var body: some View {
         ZStack {
@@ -71,7 +70,5 @@ struct PhotoPreviewScreen: View {
 }
 
 #Preview {
-    PhotoPreviewScreen(image: UIImage(named: "placeholder")!) {
-        print("Edit tapped")
-    }
+    PhotoPreviewScreen(image: UIImage(named: "placeholder")!)
 }

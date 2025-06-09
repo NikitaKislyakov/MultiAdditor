@@ -49,7 +49,6 @@ struct PhotoEditorScreen: View {
                 VStack(spacing: 12) {
                     optionsScrollView
 
-                    // MARK: - Color Filter ScrollView
                     if openColorFilters {
                         filtersScrollView
                     }

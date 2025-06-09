@@ -70,15 +70,12 @@ class CreateGifViewModel: ObservableObject {
 
     func trimAndConvertToGif() {
         guard let videoURL else { return }
-
         isProcessing = true
         gifURL = nil
-
         let asset = AVAsset(url: videoURL)
         let startTime = CMTime(seconds: self.startTime, preferredTimescale: 600)
         let endTime = CMTime(seconds: self.endTime, preferredTimescale: 600)
         let timeRange = CMTimeRangeFromTimeToTime(start: startTime, end: endTime)
-
         let outputURL = FileManager.default.temporaryDirectory.appendingPathComponent("output.gif")
 
         DispatchQueue.global(qos: .userInitiated).async {
@@ -87,12 +84,10 @@ class CreateGifViewModel: ObservableObject {
             exporter.requestedTimeToleranceAfter = .zero
             exporter.requestedTimeToleranceBefore = .zero
 
-            let frameRate = 10.0
+            let frameRate = 30.0
             let duration = CMTimeGetSeconds(timeRange.duration)
             let frameCount = max(1, Int(duration * frameRate))
-
             var frames: [CGImage] = []
-
             for i in 0..<frameCount {
                 let time = CMTime(seconds: Double(i) / frameRate + CMTimeGetSeconds(startTime), preferredTimescale: 600)
                 do {
@@ -102,29 +97,24 @@ class CreateGifViewModel: ObservableObject {
                     print("Ошибка кадра \(i): \(error.localizedDescription)")
                 }
             }
-
             guard !frames.isEmpty else {
                 DispatchQueue.main.async { self.isProcessing = false }
                 return
             }
-
             guard let destination = CGImageDestinationCreateWithURL(outputURL as CFURL, kUTTypeGIF, frames.count, nil) else {
                 DispatchQueue.main.async { self.isProcessing = false }
                 return
             }
-
             let frameProperties = [
                 kCGImagePropertyGIFDictionary: [kCGImagePropertyGIFDelayTime: 1.0 / frameRate]
             ]
             let gifProperties = [
                 kCGImagePropertyGIFDictionary: [kCGImagePropertyGIFLoopCount: 0]
             ]
-
             CGImageDestinationSetProperties(destination, gifProperties as CFDictionary)
             for frame in frames {
                 CGImageDestinationAddImage(destination, frame, frameProperties as CFDictionary)
             }
-
             if CGImageDestinationFinalize(destination) {
                 DispatchQueue.main.async {
                     self.gifURL = outputURL

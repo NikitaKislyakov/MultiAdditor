@@ -87,7 +87,7 @@ class CollageSelectorViewModel: ObservableObject {
         arr.append(array[0])
         
         for index in (1..<array.count) {
-            let result = (array[index] - array[index - 1])// / array[lastIndex]
+            let result = (array[index] - array[index - 1])
             arr.append(result)
         }
         
@@ -113,7 +113,6 @@ class CollageSelectorViewModel: ObservableObject {
                     }
                     collages.type[i] = element
                 }
-                print("factor: ", factor ?? size)
                 collageType = .row(collages, factor ?? size)
             
             case .column(var collages, let size):
@@ -126,11 +125,9 @@ class CollageSelectorViewModel: ObservableObject {
                     }
                     collages.type[i] = element
                 }
-                print("factor: ", factor ?? size)
                 collageType = .column(collages, factor ?? size)
             
             case .data(let container, let size):
-                print("factor: ", factor ?? size)
                 collageType = .data(container, factor ?? size)
                 
             }

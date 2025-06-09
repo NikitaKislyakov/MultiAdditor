@@ -48,6 +48,7 @@ struct WelcomeScreen: View {
                             Image(systemName: "plus")
                                 .font(.system(size: 40, weight: .bold))
                                 .foregroundColor(.white)
+                                .accessibilityIdentifier("Add_button")
                         }
                     }
                     
@@ -90,9 +91,7 @@ struct WelcomeScreen: View {
                 .padding()
                 .navigationDestination(isPresented: $showPreviewScreen) {
                     if let image = selectedImage {
-                        PhotoPreviewScreen(image: image) {
-                            print("Edit tapped") // потом откроем редактор
-                        }
+                        PhotoPreviewScreen(image: image)
                     }
                 }
                 
@@ -114,9 +113,16 @@ struct WelcomeScreen: View {
                     }
             }
         }
+        .onAppear {
+            if ProcessInfo.processInfo.arguments.contains("-UITestMode") {
+                if let mockImage = UIImage(named: "placeholder") {
+                    self.selectedImage = mockImage
+                    self.showPreviewScreen = true
+                }
+            }
+        }
     }
 
-    @ViewBuilder
     private func sourceButton(title: String, icon: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             VStack(spacing: 8) {
